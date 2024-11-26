@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express();
 const cors = require('cors');
-const routes = require('./netlify/functions/routes/excelRoutes');
+const routes = require('./routes/excelRoutes')
 app.use(cors())
 app.use(express.json())
 app.use('/api',routes);
