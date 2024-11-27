@@ -69,7 +69,7 @@ router.post('/validateBarcodeValue', (req, res) => {
         xlsx.writeFile(workbook, filePath);
         return res.status(200).json({ "status": true, "message": "Admitted successfully" });
     } catch (error) {
-        return res.status(400).json({ "status": false, "message": error });
+        return res.status(400).json({ "status": false, "message": "Not Admitted " });
     }
 
 });
