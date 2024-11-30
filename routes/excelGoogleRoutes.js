@@ -70,7 +70,7 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
         let scannedBarcode = req.params.scannedBarcode;
         let admit = req.params.admitted;
         jsonData.map((e, index) => {
-            if (e.BarcodeText == scannedBarcode && admit) { jsonData[index]['status'] = admit };
+            if (e.BarcodeText == scannedBarcode && admit =='true') { jsonData[index]['status'] = true };
         });
         let values = jsonData.map(row => [
             row.BarcodeText,
@@ -100,6 +100,8 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
 
 router.get('/getAdmittedData_Count/:checkCategory/:category', async(req, res) => {
     try {
+        console.log(req.params);
+        
         const result = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range,
@@ -119,11 +121,11 @@ router.get('/getAdmittedData_Count/:checkCategory/:category', async(req, res) =>
         let count = 0;
         let admittedData = [];
         for (let i = 0; i < jsonData.length; i++) {
-            if (!req.params.checkCategory && jsonData[i].status) {
+            if (!(req.params.checkCategory == 'true')&& jsonData[i].status) {
                 count++;
                 admittedData.push(jsonData[i]);
             }
-            if (req.params.checkCategory && jsonData[i].status && jsonData[i].Category == req.params.category) {
+            if (req.params.checkCategory == 'true' && jsonData[i].status && jsonData[i].Category == req.params.category) {
                 count++;
                 admittedData.push(jsonData[i]);
             }
