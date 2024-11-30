@@ -19,7 +19,7 @@ const spreadsheetId = '1MIDx73xetKEvJJ9d8H55K1s2Lq0w4uQGOO-_ofp9JK0';
 const range = 'Sheet1';
 
 
-router.post('/getBarcodeValue', async (req, res) => {
+router.get('/getBarcodeValue/:scannedBarcode', async (req, res) => {
     const result = await sheets.spreadsheets.values.get({
         spreadsheetId,
         range,
@@ -36,7 +36,7 @@ router.post('/getBarcodeValue', async (req, res) => {
         });
         return obj;
     });
-    let scannedBarcode = req.body.scannedBarcode;
+    let scannedBarcode = req.params.scannedBarcode;
     let barcodeData = jsonData.filter((e) => {
         return e.BarcodeText == scannedBarcode
     });
@@ -49,7 +49,7 @@ router.post('/getBarcodeValue', async (req, res) => {
         return res.status(400).json({ "status": false, "message": "Data not matched" });
     }
 });
-router.post('/validateBarcodeValue', async (req, res) => {
+router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
     try {
         const result = await sheets.spreadsheets.values.get({
             spreadsheetId,
@@ -67,8 +67,8 @@ router.post('/validateBarcodeValue', async (req, res) => {
             });
             return obj;
         });
-        let scannedBarcode = req.body.scannedBarcode;
-        let admit = req.body.admitted;
+        let scannedBarcode = req.params.scannedBarcode;
+        let admit = req.params.admitted;
         jsonData.map((e, index) => {
             if (e.BarcodeText == scannedBarcode && admit) { jsonData[index]['status'] = admit };
         });
@@ -88,7 +88,6 @@ router.post('/validateBarcodeValue', async (req, res) => {
               values: values, // The 2D array of new data
             },
           });   
-        // console.log(response, 'response');
         if(response.status===200){
             return res.status(200).json({ "status": true, "message": "Admitted successfully" });
         }
@@ -99,7 +98,7 @@ router.post('/validateBarcodeValue', async (req, res) => {
 
 });
 
-router.post('/getAdmittedData_Count', async(req, res) => {
+router.get('/getAdmittedData_Count/:checkCategory/:category', async(req, res) => {
     try {
         const result = await sheets.spreadsheets.values.get({
             spreadsheetId,
@@ -120,11 +119,11 @@ router.post('/getAdmittedData_Count', async(req, res) => {
         let count = 0;
         let admittedData = [];
         for (let i = 0; i < jsonData.length; i++) {
-            if (!req.body.checkCategory && jsonData[i].status) {
+            if (!req.params.checkCategory && jsonData[i].status) {
                 count++;
                 admittedData.push(jsonData[i]);
             }
-            if (req.body.checkCategory && jsonData[i].status && jsonData[i].Category == req.body.category) {
+            if (req.params.checkCategory && jsonData[i].status && jsonData[i].Category == req.params.category) {
                 count++;
                 admittedData.push(jsonData[i]);
             }
@@ -134,15 +133,14 @@ router.post('/getAdmittedData_Count', async(req, res) => {
         return res.status(400).json({ "status": false, "message": "Something Wrong" });
     }
 })
-
-router.post('/login', (req, res) => {
-    try {
-        let user = req.body.userId;
+router.get('/login/:userId/:password', (req, res) => {
+    try {       
+        let user = req.params.userId;
         let checkUser=false;
         for(let i = 0;users.length>i;i++){
             if(users[i].userId==user){
                 checkUser=true;
-                if(users[i].password==req.body.password){ 
+                if(users[i].password==req.params.password){ 
                     return res.status(200).json({ "status": true, "message": "Login successfully", "user": user})
                 }else{
                     return res.status(400).json({ "status": false, "message": "Incorrect Password" });
