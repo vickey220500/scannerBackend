@@ -6,7 +6,6 @@ const path = require('path');
 
 // Define file path for Excel file
 const filePath = path.join(__dirname, '../assets/barcodes.xlsx');
-const users = [{userId:"Admin",password:"Password@123"},{userId:"Admin",password:"Password@123"},{userId:"user001",password:"Password@123"},{userId:"user002",password:"Password@123"},{userId:"user003",password:"Password@123"}]
 
 router.post('/saveBarcodeValue', (req, res) => {
 
@@ -96,28 +95,4 @@ router.post('/getAdmittedData_Count', (req, res) => {
         return res.status(400).json({ "status": false, "message": "Something Wrong" });
     }
 })
-
-router.post('/login', (req, res) => {
-    try {
-        let user = req.body.userId;
-        let checkUser=false;
-        for(let i = 0;users.length>i;i++){
-            if(users[i].userId==user){
-                checkUser=true;
-                if(users[i].password==req.body.password){ 
-                    return res.status(200).json({ "status": true, "message": "Login successfully", "user": user})
-                }else{
-                    return res.status(400).json({ "status": false, "message": "Incorrect Password" });
-                }
-            }
-        }
-        if(!checkUser){
-            return res.status(400).json({ "status": false, "message": "Incorrect User" });
-        }
-        
-    } catch (error) {
-        return res.status(400).json({ "status": false, "message": "Something Wrong" });
-    }
-})
-
 module.exports = router;
