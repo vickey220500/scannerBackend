@@ -7,7 +7,7 @@ const path = require('path');
 
 // Create an authenticated JWT client
 const { client_email, prvKey } = {client_email:process.env.EMAILID,prvKey:process.env.PRVKEY};
-
+console.log(process.env.EMAILID);
 const auth = new google.auth.JWT(
     client_email,         // Service Account Email
     null,                 // No need for a client secret (we're using a service account)
