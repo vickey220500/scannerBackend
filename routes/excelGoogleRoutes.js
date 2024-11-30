@@ -3,14 +3,15 @@ const router = express.Router();
 const { google } = require('googleapis');
 const path = require('path');
 
-const credentials = require(path.join(__dirname, '../config/peppy-glyph-443015-r1-b4e4ef420045.json')); // Path to your Service Account JSON file
+// const credentials = require(path.join(__dirname, '../config/peppy-glyph-443015-r1-b4e4ef420045.json')); // Path to your Service Account JSON file
 
 // Create an authenticated JWT client
-const { client_email, private_key } = credentials;
+const { client_email, prvKey } = {client_email:process.env.EMAILID,prvKey:process.env.PRVKEY};
+
 const auth = new google.auth.JWT(
     client_email,         // Service Account Email
     null,                 // No need for a client secret (we're using a service account)
-    private_key,          // Service Account Private Key
+    prvKey,          // Service Account Private Key
     ['https://www.googleapis.com/auth/spreadsheets'], // Scopes needed for Google Sheets API
     null                  // Audience (optional)
 );
