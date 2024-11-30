@@ -100,8 +100,6 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
 
 router.get('/getAdmittedData_Count/:checkCategory/:category', async(req, res) => {
     try {
-        console.log(req.params);
-        
         const result = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range,
