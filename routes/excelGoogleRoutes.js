@@ -68,9 +68,10 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
             return obj;
         });
         let scannedBarcode = req.params.scannedBarcode;
-        let admit = req.params.admitted;
-        jsonData.map((e, index) => {
-            if (e.BarcodeText == scannedBarcode && admit =='true') { jsonData[index]['status'] = true };
+        let admit = req.params.admit;
+        jsonData.map((e, index) => {            
+            if (e.BarcodeText == scannedBarcode && admit =='true') {
+             jsonData[index]['status'] = true };
         });
         let values = jsonData.map(row => [
             row.BarcodeText,
@@ -79,7 +80,8 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
             row['Seat No'],
             row.status || null // Ensure empty status fields are handled
         ]);
-        values.unshift(headers);     
+        values.unshift(headers);  
+        console.log(values,'values');           
         const response = await sheets.spreadsheets.values.update({
             spreadsheetId,
             range,
@@ -87,7 +89,7 @@ router.get('/validateBarcodeValue/:scannedBarcode/:admit', async (req, res) => {
             resource: {
               values: values, // The 2D array of new data
             },
-          });   
+          });          
         if(response.status===200){
             return res.status(200).json({ "status": true, "message": "Admitted successfully" });
         }
