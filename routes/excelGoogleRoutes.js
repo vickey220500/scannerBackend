@@ -132,7 +132,7 @@ router.get('/getAdmittedData_Count/:checkCategory/:category', async(req, res) =>
         }
         return res.status(200).json({ "status": true, "message": "Count successfully", "count": count,"admittedData":admittedData });
     } catch (error) {
-        return res.status(400).json({ "status": false, "message": "Something Wrong" });
+        return res.status(400).json({ "status": false, "message": error });
     }
 })
 router.get('/login/:userId/:password', (req, res) => {
